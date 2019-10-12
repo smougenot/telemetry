@@ -7,7 +7,7 @@
 version: "3.7"
 
 services:
-    mosquitto:
+  mosquitto:
     image: eclipse-mosquitto:1.6
     container_name: mosquitto
     environment:
