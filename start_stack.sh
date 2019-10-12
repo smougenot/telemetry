@@ -15,6 +15,12 @@ export DATA_DIR='/data/data'
 
 current_dir=$(cd -P -- "$(dirname -- "$BASH_SOURCE[0]")" && pwd -P)
 
+echo "ensure user exists"
+if [ $(getent passwd telemetry | wc -l) -lt 1 ]; then
+  echo "missing user telemetry"
+  sudo useradd --system --user-group --groups docker telemetry
+fi 
+
 echo "ensure data directory is initaited"
 for p  in "${DATA_DIR}/mosquitto/data" \
     "${DATA_DIR}/mosquitto/log" \

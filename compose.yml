@@ -9,6 +9,7 @@ version: "3.7"
 services:
   mosquitto:
     image: eclipse-mosquitto:1.6
+    user: telemetry
     environment:
       - TZ=Europe/PariS
     ports:
@@ -27,6 +28,7 @@ services:
 
   influxdb:
     image: influxdb:1.7
+    user: telemetry
     environment:
       - TZ=Europe/PariS
     ports:
@@ -42,6 +44,7 @@ services:
 
   grafana:
     image: grafana/grafana:5.4.3
+    user: telemetry
     environment:
       - TZ=Europe/PariS
     depends_on:
@@ -59,6 +62,7 @@ services:
 
   node-red:
     image: node-red-with-influx:latest
+    user: telemetry
     environment:
       - TZ=Europe/PariS
     depends_on:
