@@ -16,11 +16,11 @@ export DATA_DIR='/data/data'
 current_dir=$(cd -P -- "$(dirname -- "$BASH_SOURCE[0]")" && pwd -P)
 
 echo "ensure data directory is initaited"
-for p  in     "${DATA_DIR}/mosquitto/data" \
+for p  in "${DATA_DIR}/mosquitto/data" \
     "${DATA_DIR}/mosquitto/log" \
     "${DATA_DIR}/influxdb" \
     "${DATA_DIR}/grafana"; do
-  [ -d "${p}" ] || mkdir -p "${p}" \
+  [ -d "${p}" ] || mkdir -p "${p}"
 done
 
 echo "Startng stack"
