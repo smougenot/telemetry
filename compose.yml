@@ -9,7 +9,6 @@ version: "3.7"
 services:
   mosquitto:
     image: eclipse-mosquitto:1.6
-    container_name: mosquitto
     environment:
       - TZ=Europe/PariS
     ports:
@@ -19,22 +18,30 @@ services:
       - ./mosquitto/users:/mosquitto/config/users
       - ${DATA_DIR}/mosquitto/data:/mosquitto/data
       - ${DATA_DIR}/mosquitto/log:/mosquitto/log
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 120s
 
   influxdb:
     image: influxdb:1.7
-    container_name: influxdb
     environment:
       - TZ=Europe/PariS
     ports:
       - 8086:8086
     volumes:
       - ${DATA_DIR}/influxdb:/var/lib/influxdb
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 120s
 
   grafana:
     image: grafana/grafana:5.4.3
-    container_name: grafana
     environment:
       - TZ=Europe/PariS
     depends_on:
@@ -43,11 +50,15 @@ services:
       - 3000:3000
     volumes:
       - ${DATA_DIR}/grafana:/var/lib/grafana
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 120s
 
   node-red:
     image: node-red-with-influx:latest
-    container_name: node-red
     environment:
       - TZ=Europe/PariS
     depends_on:
@@ -59,8 +70,13 @@ services:
       - node-red-net
     volumes:
       - node-red-data:/data
-    restart: always
-    
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 120s
+
 volumes:
   node-red-data:
 
