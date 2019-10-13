@@ -45,9 +45,10 @@ services:
         window: 120s
 
   grafana:
-    image: grafana/grafana:5.4.3
+    image: grafana/grafana:6.4.2
     environment:
       - TZ=Europe/PariS
+      - GF_SECURITY_ADMIN_PASSWORD=b9ef816902af9fe509e9dd858122742ffdb0558988b503cce2cff7a1ec33cb35
     depends_on:
       - influxdb
     ports:
@@ -56,6 +57,7 @@ services:
       - telemetry-net
     volumes:
       - grafana-data:/var/lib/grafana
+      - grafana-log:/var/log/grafana
     deploy:
       restart_policy:
         condition: on-failure
@@ -86,6 +88,7 @@ services:
 volumes:
   node-red-data:
   grafana-data:
+  grafana-log:
   influxdb-data:
   mosquitto-data:
   mosquitto-log:
