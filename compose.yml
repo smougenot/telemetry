@@ -9,16 +9,17 @@ version: "3.7"
 services:
   mosquitto:
     image: eclipse-mosquitto:1.6
-    user: telemetry
     environment:
       - TZ=Europe/PariS
     ports:
       - 1883:1883
+    networks:
+      - telemetry-net
     volumes:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - ./mosquitto/users:/mosquitto/config/users
-      - ${DATA_DIR}/mosquitto/data:/mosquitto/data
-      - ${DATA_DIR}/mosquitto/log:/mosquitto/log
+      - mosquitto-data:/mosquitto/data
+      - mosquitto-log:/mosquitto/log
     deploy:
       restart_policy:
         condition: on-failure
@@ -28,13 +29,14 @@ services:
 
   influxdb:
     image: influxdb:1.7
-    user: telemetry
     environment:
       - TZ=Europe/PariS
     ports:
       - 8086:8086
+    networks:
+      - telemetry-net
     volumes:
-      - ${DATA_DIR}/influxdb:/var/lib/influxdb
+      - influxdb-data:/var/lib/influxdb
     deploy:
       restart_policy:
         condition: on-failure
@@ -44,15 +46,16 @@ services:
 
   grafana:
     image: grafana/grafana:5.4.3
-    user: telemetry
     environment:
       - TZ=Europe/PariS
     depends_on:
       - influxdb
     ports:
       - 3000:3000
+    networks:
+      - telemetry-net
     volumes:
-      - ${DATA_DIR}/grafana:/var/lib/grafana
+      - grafana-data:/var/lib/grafana
     deploy:
       restart_policy:
         condition: on-failure
@@ -62,7 +65,6 @@ services:
 
   node-red:
     image: node-red-with-influx:latest
-    user: telemetry
     environment:
       - TZ=Europe/PariS
     depends_on:
@@ -71,7 +73,7 @@ services:
     ports:
       - "1880:1880"
     networks:
-      - node-red-net
+      - telemetry-net
     volumes:
       - node-red-data:/data
     deploy:
@@ -83,6 +85,10 @@ services:
 
 volumes:
   node-red-data:
+  grafana-data:
+  influxdb-data:
+  mosquitto-data:
+  mosquitto-log:
 
 networks:
-  node-red-net:
+  telemetry-net:
