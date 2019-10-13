@@ -45,7 +45,7 @@ services:
         window: 120s
 
   grafana:
-    image: grafana/grafana:6.4.2
+    image: grafana/grafana:6.3.6
     environment:
       - TZ=Europe/PariS
       - GF_SECURITY_ADMIN_PASSWORD=b9ef816902af9fe509e9dd858122742ffdb0558988b503cce2cff7a1ec33cb35
