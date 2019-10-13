@@ -1,0 +1,16 @@
+## Volume manipulation 
+
+Due to volume limitations we are to manipulate directory rights
+
+- locate volume for grafana
+  - change permissions
+  - `chmod 775 -R ...`
+  - `chown 472:472 -R ...`
+- locate volume for mosquitto
+  - change permissions
+  - `chmod 775 -R ...`
+  - `chown 1883:1883 -R ...`
+- locate volume for nodered
+  - change permissions
+  - `chmod 775 -R ...`
+  - `chown 1000:1000 -R ...`
