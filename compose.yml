@@ -1,8 +1,7 @@
 ################################################################################
-# Node-RED Stack or Compose
+# Telemetry Stack
 ################################################################################
-# docker stack deploy node-red --compose-file docker-compose-node-red.yml
-# docker-compose -f docker-compose-node-red.yml -p myNoderedProject up
+# docker stack deploy telemetry --compose-file compose.yml
 ################################################################################
 version: "3.7"
 
