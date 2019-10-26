@@ -101,7 +101,6 @@ services:
     environment:
       - TZ=Europe/PariS
       - HOST_PROC=/host/proc
-      - LD_LIBRARY_PATH=/opt/vc/lib
     depends_on:
       - influxdb
     devices:
@@ -111,7 +110,6 @@ services:
     volumes:
       - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
       - /proc:/host/proc:ro
-      - /opt/vc:/opt/vc:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     deploy:
       restart_policy:
