@@ -29,14 +29,14 @@ services:
   influxdb:
     image: influxdb:1.7
     environment:
-      - TZ=Europe/PariS
+      - TZ=Europe/Paris
       - INFLUXDB_DB=home_db
       - INFLUXDB_HTTP_AUTH_ENABLED=true
       - INFLUXDB_ADMIN_ENABLED=true
       - INFLUXDB_ADMIN_USER=admin 
-      - INFLUXDB_ADMIN_PASSWORD=224d94b90bf7f3deb335ea5f1055c3b964807ad8cd75c923595e8c94838faea1
+      - INFLUXDB_ADMIN_PASSWORD=b13269a6b270bb49cf5d14abc761ffac
       - INFLUXDB_USER=home_user
-      - INFLUXDB_USER_PASSWORD=40fce79a5cc28273f50af15899460f58f76ebcc22ff30080813b10a42d3c5703
+      - INFLUXDB_USER_PASSWORD=c89143c33f009119b67abf9cc2c50f7b
       - INFLUXDB_READ_USER=readme
       - INFLUXDB_READ_PASSWORD=qgezoc4o2zAyEyucX6Jz
     ports:
