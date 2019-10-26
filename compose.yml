@@ -58,6 +58,7 @@ services:
       - TZ=Europe/PariS
       - GF_SECURITY_ADMIN_PASSWORD=b9ef816902af9fe509e9dd858122742ffdb0558988b503cce2cff7a1ec33cb35
       - GF_PATHS_LOGS=/var/log/grafana/grafana.log
+      - GF_log_level=debug
     depends_on:
       - influxdb
     ports:
