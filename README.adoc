@@ -1,4 +1,25 @@
-## Volume manipulation 
+## Aim
+
+Provide an infrastructure to store and display telemetry at home.
+This telemetry is mainly for fun (e.g. weather conditions, hardware monitoring)
+
+## Run infrastructure
+
+I use a raspberry pi 4 to run this but it is way more powerfull than required.
+Beware this infrastrure can be write intensive so do not keep it writing on mmc or you will soon fry it.
+In my case root partition is on a usb storage.
+
+You will need docker installed
+
+Then just run the `start_stack.sh`
+First time it will complain about passwords you need to set.
+Just add a file name `secrets.env` with all the variable it complains about (having set a value as you like).
+Relaunch once you have chosen all the passwords
+Enjoy
+
+## Trouble shooting
+
+### Volume manipulation 
 
 Due to volume limitations we are to manipulate directory rights
 
