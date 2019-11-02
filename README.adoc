@@ -1,3 +1,9 @@
+# telemetry project
+
+image:https://www.codefactor.io/repository/github/smougenot/telemetry/badge[
+"CodeFactor.io",
+link="https://www.codefactor.io/repository/github/smougenot/telemetry"]
+
 ## Aim
 
 Provide an infrastructure to store and display telemetry at home.
