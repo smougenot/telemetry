@@ -15,7 +15,7 @@ else
   echo "password can be set using the file : ${current_dir}/secrets.conf"
 fi
 
-_host=${influx_host:-pi4-1:8086}
+_host=${influx_host:-pi4:8086}
 _database=${influx_db:-home_db}
 _mesurement=${influx_measurement:-weather}
 _user=${influx_user:-}
@@ -47,11 +47,13 @@ queryEndpoint() {
 }
 
 # prepare tmp file
-TMPFILE=$(mktemp -t influx_delete_XXXXXX.log )
+TMPFILE=$(mktemp -t influx_list_XXXXXX.log )
+# TMPFILEDELETE=$(mktemp -t influx_delete_XXXXXX.log )
 
 # Cleanup at end of script execution
 cleanup () {
   [ -z ${TMPFILE} ] || rm -f ${TMPFILE}
+  [ -z ${TMPFILEDELETE:-} ] || rm -f ${TMPFILEDELETE}
 }
 trap cleanup EXIT
 
@@ -59,7 +61,14 @@ trap cleanup EXIT
 # Run
 # -------------------------------
 
-_query="SELECT time, temperature FROM ${_mesurement} WHERE temperature < -99"
+#_query="SELECT time, temperature FROM ${_mesurement} WHERE temperature < -100 ORDER BY time DESC limit 500"
+_query="SELECT time, temperature FROM ${_mesurement} WHERE temperature > 100 ORDER BY time DESC limit 500"
+#_query="SELECT time, pressure FROM ${_mesurement} WHERE pressure > 1000000  AND time >= '2019-11-30T11:30:00Z'  ORDER BY time DESC limit 500"
+#_query="SELECT time, humidity FROM ${_mesurement} WHERE humidity > 100  ORDER BY time DESC limit 600"
+#_query="SELECT time, light FROM ${_mesurement} WHERE light > 1000"
+#_query="SELECT time, UV FROM ${_mesurement} WHERE UV > 2000"
+
+# _query="show queries"
 
 log "User : ${_user}"
 log "Query : ${_query}"
@@ -81,8 +90,18 @@ line1=$(head -n 1 "${TMPFILE}")
 if [ "error" == "${line1}" ]; then
   fail "Error during request : $(cat "${TMPFILE}")"
 fi
+
 # transform time stamps into delete queries
 sed -i "1d; s|.*,.*,\(.*\),.*|\1|g; s|\(.*\)|delete from ${_mesurement} where time = \1;|g" "${TMPFILE}"
-cat "${TMPFILE}"
-curl -F "q=@${TMPFILE}" -F "async=true" "$(queryEndpoint)" \
+# sed -i "1d; s|.*,.*,\(.*\),.*|\1|g; s|\(.*\)|select * from ${_mesurement} where time = \1;|g" "${TMPFILE}"
+log "Nb lines to delete : $(wc -l < "${TMPFILE}")"
+# cat "${TMPFILE}" | tr -d '\n' > "${TMPFILEDELETE}"
+# log "content >\n$(cat "${TMPFILEDELETE}")"
+
+# curl -v -G "$(queryEndpoint)" \
+#   -u "${_user}:${_pswd}" \
+#   --data-urlencode "q=$(cat "${TMPFILE}")" \
+#   -H "Accept: application/csv" \
+  
+curl -v -F "q=@${TMPFILE}" -F "async=true" "$(queryEndpoint)" \
   -u "${_user}:${_pswd}" 
