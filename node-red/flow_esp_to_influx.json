@@ -7,40 +7,6 @@
         "info": ""
     },
     {
-        "id": "44da7164.85e3",
-        "type": "mqtt-broker",
-        "z": "",
-        "name": "pi4-mosquitto",
-        "broker": "mosquitto",
-        "port": "1883",
-        "clientid": "node-red-pi4",
-        "usetls": false,
-        "compatmode": false,
-        "keepalive": "60",
-        "cleansession": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthPayload": "",
-        "closeTopic": "",
-        "closeQos": "0",
-        "closePayload": "",
-        "willTopic": "",
-        "willQos": "0",
-        "willPayload": ""
-    },
-    {
-        "id": "986b868b.bf2668",
-        "type": "influxdb",
-        "z": "",
-        "hostname": "influxdb",
-        "port": "8086",
-        "protocol": "http",
-        "database": "home_db",
-        "name": "telemetry_home",
-        "usetls": false,
-        "tls": ""
-    },
-    {
         "id": "3215c68b.4218ca",
         "type": "mqtt in",
         "z": "27a93be2.f2d204",
@@ -67,7 +33,7 @@
         "measurement": "weather",
         "precision": "",
         "retentionPolicy": "",
-        "x": 680,
+        "x": 820,
         "y": 180,
         "wires": []
     },
@@ -117,5 +83,104 @@
         "x": 550,
         "y": 280,
         "wires": []
+    },
+    {
+        "id": "dab4502.bcb2f3",
+        "type": "mqtt in",
+        "z": "27a93be2.f2d204",
+        "name": "tasmota_sensor",
+        "topic": "tele/+/SENSOR",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "44da7164.85e3",
+        "x": 230,
+        "y": 460,
+        "wires": [
+            [
+                "1752b611.91ed12",
+                "feb2f997.74208"
+            ]
+        ]
+    },
+    {
+        "id": "1752b611.91ed12",
+        "type": "function",
+        "z": "27a93be2.f2d204",
+        "name": "map_to_influx",
+        "func": "// parse topic for device + metric nature\n// topic : esp/+/status/# with deviceid then metric\n// payload : the value\n\nvar regex = /tele\\/(tasmota_)?([^\\/]+)\\/SENSOR/;\nvar matches = msg.topic.match(regex);\n\n// build new payload\nvar tag={};\ntag.device=matches[2];\n\nvar data = JSON.parse(msg.payload);\nvar field=data.BME280;\n\nmsg.matches=matches;\nmsg.original_payload=msg.payload;\nmsg.payload=[field, tag];\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 420,
+        "y": 460,
+        "wires": [
+            [
+                "fdd3971a.f12f38",
+                "3946e32c.37b5cc"
+            ]
+        ]
+    },
+    {
+        "id": "fdd3971a.f12f38",
+        "type": "debug",
+        "z": "27a93be2.f2d204",
+        "name": "tasmota_mapped",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 710,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "feb2f997.74208",
+        "type": "debug",
+        "z": "27a93be2.f2d204",
+        "name": "tasmota_src",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 440,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "44da7164.85e3",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "pi4-mosquitto",
+        "broker": "mosquitto",
+        "port": "1883",
+        "clientid": "node-red-pi4",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "986b868b.bf2668",
+        "type": "influxdb",
+        "z": "",
+        "hostname": "influxdb",
+        "port": "8086",
+        "protocol": "http",
+        "database": "home_db",
+        "name": "telemetry_home",
+        "usetls": false,
+        "tls": ""
     }
 ]
