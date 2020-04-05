@@ -50,7 +50,7 @@ done
 [ -z ${_need_abort} ] || exit 1
 
 # echo "debug sed : ${_sed_args} "
-find temp -type f -exec sed -i "${_sed_args}" '{}' \;
+find "${current_dir}/temp" -type f -exec sed -i "${_sed_args}" '{}' \;
 
 #
 # Run the stack
