@@ -27,7 +27,7 @@ services:
         window: 120s
 
   influxdb:
-    image: influxdb:1.7
+    image: influxdb:1.8.1
     environment:
       - TZ=Europe/Paris
       - INFLUXDB_DB=home_db
@@ -46,6 +46,9 @@ services:
     volumes:
       - influxdb-data:/var/lib/influxdb
     deploy:
+      resources:
+         limits:
+            memory: 2000m
       restart_policy:
         condition: on-failure
         delay: 5s
