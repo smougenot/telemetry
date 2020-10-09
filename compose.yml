@@ -27,10 +27,11 @@ services:
         window: 120s
 
   influxdb:
-    image: influxdb:1.8.1
+    image: influxdb:1.8.3
     environment:
       - TZ=Europe/Paris
-      - INFLUXDB_DB=home_db
+      - INFLUXDB_DB=home_db 
+      - INFLUXDB_DATA_INDEX_VERSION=tsi1
       - INFLUXDB_HTTP_AUTH_ENABLED=true
       - INFLUXDB_ADMIN_ENABLED=true
       - INFLUXDB_ADMIN_USER=admin
@@ -46,9 +47,9 @@ services:
     volumes:
       - influxdb-data:/var/lib/influxdb
     deploy:
-      resources:
-         limits:
-            memory: 2000m
+            # resources:
+            # limits:
+            # memory: 1000M
       restart_policy:
         condition: on-failure
         delay: 5s
