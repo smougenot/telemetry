@@ -9,7 +9,7 @@ services:
   mosquitto:
     image: eclipse-mosquitto:1.6
     environment:
-      - TZ=Europe/PariS
+      - TZ=Europe/Paris
     ports:
       - 1883:1883
     networks:
@@ -26,12 +26,39 @@ services:
         max_attempts: 5
         window: 120s
 
+  victoriametrics:
+    image: victoriametrics/victoria-metrics:v1.43.0
+    environment:
+      - TZ=Europe/Paris
+    ports:
+      - 8428:8428
+      - 8087:8087
+      - 2003:2003
+      - 4242:4242
+    volumes:
+      - victoriametrics-data:/storage
+    command:
+      - '--storageDataPath=/storage'
+      - '--graphiteListenAddr=:2003'
+      - '--opentsdbListenAddr=:4242'
+      - '--influxListenAddr=:8087'
+      - '--httpListenAddr=:8428'
+    networks:
+      - telemetry-net
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 120s
+
   influxdb:
     image: influxdb:1.8.3
     environment:
       - TZ=Europe/Paris
       - INFLUXDB_DB=home_db 
       - INFLUXDB_DATA_INDEX_VERSION=tsi1
+#      - INFLUXDB_DATA_CACHE_MAX_MEMORY_SIZE=2g
       - INFLUXDB_HTTP_AUTH_ENABLED=true
       - INFLUXDB_ADMIN_ENABLED=true
       - INFLUXDB_ADMIN_USER=admin
@@ -129,6 +156,7 @@ volumes:
   influxdb-data:
   mosquitto-data:
   mosquitto-log:
+  victoriametrics-data:
 
 networks:
   telemetry-net:
