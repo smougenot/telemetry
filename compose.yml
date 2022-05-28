@@ -6,7 +6,7 @@
 
 services:
   mosquitto:
-    image: eclipse-mosquitto:1.6
+    image: eclipse-mosquitto:latest
     environment:
       - TZ=Europe/Paris
     ports:
@@ -14,12 +14,7 @@ services:
     networks:
       - telemetry-net
     volumes:
-      - type: bind
-        source: ./mosquitto/mosquitto.conf
-        target: /mosquitto/config/mosquitto.conf
-      - type: bind
-        source: ./mosquitto/users
-        target: /mosquitto/config/users
+      - ./mosquitto:/mosquitto/config
       - mosquitto-data:/mosquitto/data
       - mosquitto-log:/mosquitto/log
     deploy:
