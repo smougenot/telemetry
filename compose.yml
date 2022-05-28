@@ -25,87 +25,9 @@ services:
         max_attempts: 5
         window: 120s
 
-  # Replacement for Influx
-  victoriametrics:
-    image: victoriametrics/victoria-metrics:v1.43.0
-    environment:
-      - TZ=Europe/Paris
-    ports:
-      - 8428:8428
-      - 8087:8087
-      - 2003:2003
-      - 4242:4242
-    volumes:
-      - victoriametrics-data:/storage
-    command:
-      - '--storageDataPath=/storage'
-      - '--graphiteListenAddr=:2003'
-      - '--opentsdbListenAddr=:4242'
-      - '--influxListenAddr=:8087'
-      - '--httpListenAddr=:8428'
-    networks:
-      - telemetry-net
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 5
-        window: 120s
-
-  grafana:
-    image: grafana/grafana:6.3.6
-    environment:
-      - TZ=Europe/PariS
-      #- GF_SECURITY_ADMIN_PASSWORD=@@GF_SECURITY_ADMIN_PASSWORD@@
-      - GF_PATHS_LOGS=/var/log/grafana/grafana.log
-    depends_on:
-      - victoriametrics
-    ports:
-      - 3000:3000
-    networks:
-      - telemetry-net
-    volumes:
-      - grafana-data:/var/lib/grafana
-      - grafana-log:/var/log/grafana
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 5
-        window: 120s
-
-  node-red:
-    # this image is a custom build
-    # see node-red directory
-    # image: node-red-with-influx:latest
-    build:
-      context: node-red
-      dockerfile: nodered-DockerFile.yml
-    environment:
-      - TZ=Europe/Paris
-    depends_on:
-      - victoriametrics
-      - mosquitto
-    ports:
-      - "1880:1880"
-    networks:
-      - telemetry-net
-    volumes:
-      - node-red-data:/data
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 5
-        window: 120s
-
 volumes:
-  node-red-data:
-  grafana-data:
-  grafana-log:
   mosquitto-data:
   mosquitto-log:
-  victoriametrics-data:
 
 networks:
   telemetry-net:
