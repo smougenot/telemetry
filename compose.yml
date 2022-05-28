@@ -14,8 +14,12 @@ services:
     networks:
       - telemetry-net
     volumes:
-      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
-      - ./mosquitto/users:/mosquitto/config/users
+      - type: bind
+        source: ./mosquitto/mosquitto.conf
+        target: /mosquitto/config/mosquitto.conf
+      - type: bind
+        source: ./mosquitto/users
+        target: /mosquitto/config/users
       - mosquitto-data:/mosquitto/data
       - mosquitto-log:/mosquitto/log
     deploy:
